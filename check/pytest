@@ -37,3 +37,8 @@ else
         grep -Pv '^(.\[0m)?[\.FEsx]+(.\[36m)?\s+\[\s*\d+%\](.\[0m)?$'
     exit "${PIPESTATUS[0]}"
 fi
+
+
+#  13 failed, 2144 passed, 60 skipped, 296 warnings :pre
+# 435 failed, 1722 passed, 60 skipped, 89 warnings  : np2
+# 15 failed, 2142 passed, 60 skipped, 297 warnings : single fix

@@ -293,7 +293,7 @@ class BinaryCode(object):
 
     def __str__(self):
         """Return an easy-to-read string representation."""
-        string_return = [list(map(list, self.encoder.toarray()))]
+        string_return = [self.encoder.toarray().tolist()]
 
         dec_str = '['
         for term in self.decoder:

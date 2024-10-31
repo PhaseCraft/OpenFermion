@@ -140,16 +140,16 @@ class SparseOperatorTest(unittest.TestCase):
 class JordanWignerSparseTest(unittest.TestCase):
     def test_jw_sparse_0create(self):
         expected = csc_matrix(([1], ([1], [0])), shape=(2, 2))
-        self.assertTrue(numpy.allclose(jordan_wigner_sparse(FermionOperator('0^')).A, expected.A))
+        self.assertTrue(numpy.allclose(jordan_wigner_sparse(FermionOperator('0^')).toarray(), expected.toarray()))
 
     def test_jw_sparse_1annihilate(self):
         expected = csc_matrix(([1, -1], ([0, 2], [1, 3])), shape=(4, 4))
-        self.assertTrue(numpy.allclose(jordan_wigner_sparse(FermionOperator('1')).A, expected.A))
+        self.assertTrue(numpy.allclose(jordan_wigner_sparse(FermionOperator('1')).toarray(), expected.toarray()))
 
     def test_jw_sparse_0create_2annihilate(self):
         expected = csc_matrix(([-1j, 1j], ([4, 6], [1, 3])), shape=(8, 8), dtype=numpy.complex128)
         self.assertTrue(
-            numpy.allclose(jordan_wigner_sparse(FermionOperator('0^ 2', -1j)).A, expected.A)
+            numpy.allclose(jordan_wigner_sparse(FermionOperator('0^ 2', -1j)).toarray(), expected.toarray())
         )
 
     def test_jw_sparse_0create_3annihilate(self):
@@ -159,13 +159,13 @@ class JordanWignerSparseTest(unittest.TestCase):
             dtype=numpy.complex128,
         )
         self.assertTrue(
-            numpy.allclose(jordan_wigner_sparse(FermionOperator('0^ 3', -1j)).A, expected.A)
+            numpy.allclose(jordan_wigner_sparse(FermionOperator('0^ 3', -1j)).toarray(), expected.toarray())
         )
 
     def test_jw_sparse_twobody(self):
         expected = csc_matrix(([1, 1], ([6, 14], [5, 13])), shape=(16, 16))
         self.assertTrue(
-            numpy.allclose(jordan_wigner_sparse(FermionOperator('2^ 1^ 1 3')).A, expected.A)
+            numpy.allclose(jordan_wigner_sparse(FermionOperator('2^ 1^ 1 3')).toarray(), expected.toarray())
         )
 
     def test_qubit_operator_sparse_n_qubits_too_small(self):
@@ -174,7 +174,7 @@ class JordanWignerSparseTest(unittest.TestCase):
 
     def test_qubit_operator_sparse_n_qubits_not_specified(self):
         expected = csc_matrix(([1, 1, 1, 1], ([1, 0, 3, 2], [0, 1, 2, 3])), shape=(4, 4))
-        self.assertTrue(numpy.allclose(qubit_operator_sparse(QubitOperator('X1')).A, expected.A))
+        self.assertTrue(numpy.allclose(qubit_operator_sparse(QubitOperator('X1')).toarray(), expected.toarray()))
 
     def test_get_linear_qubit_operator_diagonal_wrong_n(self):
         """Testing with wrong n_qubits."""
@@ -364,8 +364,8 @@ class JWNumberRestrictOperatorTest(unittest.TestCase):
         restricted_hamiltonian = jw_number_restrict_operator(
             hamiltonian_sparse, target_electrons, n_qubits
         )
-        true_eigvals, _ = eigh(hamiltonian_sparse.A)
-        test_eigvals, _ = eigh(restricted_hamiltonian.A)
+        true_eigvals, _ = eigh(hamiltonian_sparse.toarray())
+        test_eigvals, _ = eigh(restricted_hamiltonian.toarray())
 
         self.assertAlmostEqual(norm(true_eigvals[:6] - test_eigvals[:6]), 0.0)
 
@@ -375,7 +375,7 @@ class JWNumberRestrictOperatorTest(unittest.TestCase):
         hop_restrict = jw_number_restrict_operator(hop_sparse, 1, n_qubits=4)
         expected = csc_matrix(([1, 1], ([0, 2], [2, 0])), shape=(4, 4))
 
-        self.assertTrue(numpy.allclose(hop_restrict.A, expected.A))
+        self.assertTrue(numpy.allclose(hop_restrict.toarray(), expected.toarray()))
 
     def test_jw_restrict_operator_interaction_to_1_particle(self):
         interaction = FermionOperator('3^ 2^ 4 1')
@@ -383,7 +383,7 @@ class JWNumberRestrictOperatorTest(unittest.TestCase):
         interaction_restrict = jw_number_restrict_operator(interaction_sparse, 1, n_qubits=6)
         expected = csc_matrix(([], ([], [])), shape=(6, 6))
 
-        self.assertTrue(numpy.allclose(interaction_restrict.A, expected.A))
+        self.assertTrue(numpy.allclose(interaction_restrict.toarray(), expected.toarray()))
 
     def test_jw_restrict_operator_interaction_to_2_particles(self):
         interaction = FermionOperator('3^ 2^ 4 1') + FermionOperator('4^ 1^ 3 2')
@@ -396,7 +396,7 @@ class JWNumberRestrictOperatorTest(unittest.TestCase):
         # in the 2-particle subspace (1, 4) and (2, 3) are 7th and 9th.
         expected = csc_matrix(([-1, -1], ([7, 9], [9, 7])), shape=(dim, dim))
 
-        self.assertTrue(numpy.allclose(interaction_restrict.A, expected.A))
+        self.assertTrue(numpy.allclose(interaction_restrict.toarray(), expected.toarray()))
 
     def test_jw_restrict_operator_hopping_to_1_particle_default_nqubits(self):
         interaction = FermionOperator('3^ 2^ 4 1') + FermionOperator('4^ 1^ 3 2')
@@ -410,7 +410,7 @@ class JWNumberRestrictOperatorTest(unittest.TestCase):
         # in the 2-particle subspace (1, 4) and (2, 3) are 7th and 9th.
         expected = csc_matrix(([-1, -1], ([7, 9], [9, 7])), shape=(dim, dim))
 
-        self.assertTrue(numpy.allclose(interaction_restrict.A, expected.A))
+        self.assertTrue(numpy.allclose(interaction_restrict.toarray(), expected.toarray()))
 
     def test_jw_restrict_jellium_ground_state_integration(self):
         n_qubits = 4
@@ -582,7 +582,7 @@ class GroundStateTest(unittest.TestCase):
         )
         expected_state = csc_matrix(
             ([1j, 1], ([1, 2], [0, 0])), shape=(4, 1), dtype=numpy.complex128
-        ).A
+        ).toarray()
         expected_state /= numpy.sqrt(2.0)
 
         self.assertAlmostEqual(ground[0], -2)

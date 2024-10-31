@@ -58,6 +58,8 @@ class CodeOperatorTest(unittest.TestCase):
         d = BinaryCode([[0, 1], [1, 0]], [BinaryPolynomial(' w0 '), BinaryPolynomial('w0 w1')])
 
         b = a * d
+        print(b)
+        print(b.encoder.toarray().tolist())
         self.assertEqual(
             b.__repr__(), "[[[1, 0, 1], [0, 1, 0]]," " '[[W0] + [W0 W1],[1] +" " [W0],[W0 W1]]']"
         )
