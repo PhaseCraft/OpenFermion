@@ -1,4 +1,4 @@
-cirq-core @ git+https://github.com/PhaseCraft/Cirq.git@numpy2
+cirq-core @ git+https://github.com/PhaseCraft/Cirq.git@165e3e3ac11f8b0a2661e009937f5faca7766bdd
 deprecation
 h5py
 networkx
